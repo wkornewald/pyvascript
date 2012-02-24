@@ -65,6 +65,9 @@ class Test(PyvaTest):
         self.check('x.y[0].z()', 'x.y[0].z();')
         self.check('x.y[0].z[214].f().a', 'x.y[0].z[214].f().a;')
 
+    def test_floats(self):
+        self.check('2.3 * 1.4', '(2.3 * 1.4);')
+
     def test_assign_call_dot_getitem(self):
         self.check('a = x.f().y[0]', 'a = x.f().y[0];')
         self.check('a = x.y[0].z()', 'a = x.y[0].z();')
