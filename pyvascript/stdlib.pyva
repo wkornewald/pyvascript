@@ -1,3 +1,10 @@
+def reversed(x):
+    result = []
+    l = len(x)
+    for i in range(l):
+        result.append(x[l-i-1])
+    return result
+
 def list(x):
     result = []
     for item in x:
