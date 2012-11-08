@@ -1,0 +1,91 @@
+def reversed(x):
+    result = []
+    l = len(x)
+    for i in range(l):
+        result.append(x[l-i-1])
+    return result
+
+def list(x):
+    result = []
+    for item in x:
+        result.append(item)
+    return result
+
+def dict(x):
+    result = {}
+    for key in x:
+        result[key] = x[key]
+    return result
+
+def int(x):
+    return parseInt(x)
+
+def float(x):
+    return parseFloat(x)
+
+def str(x):
+    return x.toString()
+
+def _print(x):
+    if console and console.log:
+        console.log(x)
+
+def print():
+    for arg in arguments:
+        _print(arg)
+
+# Add a few base functions, so we don't have a hard time switching
+# from Python.
+Array.prototype.append = def(self, item):
+                             self.push(item)
+Array.prototype.insert = def(self, index, item):
+                             self.splice(index, 0, item)
+Array.prototype.extend = def(self, items):
+                             for item in items:
+                                 self.append(item)
+Array.prototype.index = Array.prototype.indexOf
+
+String.prototype.index = String.prototype.indexOf
+String.prototype.join = def(self, iterable):
+                            return iterable.join(self)
+String.prototype.lower = String.prototype.toLowerCase
+String.prototype.upper = String.prototype.toUpperCase
+
+
+def isinstance(item, cls):
+    if JS('cls instanceof Array'):
+        for cls_item in cls:
+            if isinstance(item, cls_item):
+                return True
+        return False
+
+    if cls is list:
+        cls = Array
+    elif cls is dict:
+        cls = Object
+    elif cls is str:
+        cls = String
+    elif cls is int or cls is float:
+        isnumber = item.constructor is Number.prototype.constructor
+        return isnumber and cls(item) == item
+    else:
+        return JS('item instanceof cls')
+    return item.constructor is cls.prototype.constructor
+
+def _$pyva_iter(iter_object):
+    # Use multiple isinstance checks because otherwise this leads to
+    # infinite recursion
+    if iter_object.callee and hasattr(iter_object, 'length') or \
+            isinstance(iter_object, list):
+        return iter_object
+
+    key_list = []
+    JS('for (var key in iter_object)')
+    key_list.append(key)
+    return key_list
+
+Function.prototype.bind = def(self, owner):
+                              func = self
+                              def bound():
+                                  return func.apply(owner, arguments)
+                              return bound
