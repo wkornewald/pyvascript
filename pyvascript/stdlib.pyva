@@ -45,8 +45,12 @@ Array.prototype.extend = def(self, items):
                                  self.append(item)
 Array.prototype.index = Array.prototype.indexOf
 
+String.prototype.index = String.prototype.indexOf
 String.prototype.join = def(self, iterable):
                             return iterable.join(self)
+String.prototype.lower = String.prototype.toLowerCase
+String.prototype.upper = String.prototype.toUpperCase
+
 
 def isinstance(item, cls):
     if JS('cls instanceof Array'):
