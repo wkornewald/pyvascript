@@ -76,7 +76,9 @@ for expr:var !(self.register_var(var))
     | expr:data block:body -> self.make_for(var, data, body)
     )
 
+defaultarg expr:name expr:default -> (name, default)
+stararg :name -> (name,)
 func funcstmt:f -> '(%s)' % f
-funcstmt !(self.push_vars()) :name [expr*:args] !(self.register_globals(args)) funcblock:body !(self.pop_vars()) -> self.make_func(name, args, body)
+funcstmt !(self.push_vars()) :name [[expr*:args] :stararg] !(self.register_globals(args)) funcblock:body !(self.pop_vars()) -> self.make_func(name, args, stararg, body)
 
 try block:body expr:err block:errbody block?:finbody -> 'try %s catch(%s) %s' % (body, err, errbody) + (' finally %s' % finbody if finbody else '')

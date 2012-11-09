@@ -227,7 +227,13 @@ class Translator(OMeta.makeGrammar(pyva_translator, {'p': p, 'json': json})):
         return '%sfor (%s = (%s) - 1; %s >= %s; %s) %s' % (
             initstr, var, start, var, end, stepstr, body)
 
-    def make_func(self, name, args, body):
+    def _prepend_body(self, body, code):
+            start = body.index('{') + 1
+            code = '\n' + '\n'.join((self.indentation + 1) * '  ' + line
+                                    for line in code.split('\n')) + '\n'
+            return body[:start] + code + body[start:]
+
+    def make_func(self, name, args, stararg, body):
         if name:
             name = self.get_name(name[1])
             self.register_var(name)
@@ -237,4 +243,18 @@ class Translator(OMeta.makeGrammar(pyva_translator, {'p': p, 'json': json})):
             func = 'function'
         if args and args[0] == self.get_name('self'):
             args = args[1:]
-        return '%s(%s) %s' % (func, ', '.join(args), body)
+        clean_args = []
+        for arg in reversed(args):
+            if isinstance(arg, (tuple, list)):
+                arg, default = arg
+                body = self._prepend_body(body,
+                       'if (typeof %(var)s == "undefined") %(var)s = %(value)s;'
+                       % {'var': arg, 'value': default})
+            clean_args.insert(0, arg)
+        if stararg:
+            stararg = self.get_name(stararg)
+            self.register_var(stararg)
+            body = self._prepend_body(body,
+                   'var %s = Array.prototype.slice.call(arguments, %d);'
+                   % (stararg, len(args)))
+        return '%s(%s) %s' % (func, ', '.join(clean_args), body)
