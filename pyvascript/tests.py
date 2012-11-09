@@ -27,7 +27,7 @@ class Test(PyvaTest):
 
     def test_delete(self):
         self.check('del x[a]', 'delete x[a];')
-        self.check("del x['a']", "delete x['a'];")
+        self.check("del x['a']", 'delete x["a"];')
         self.check('del x.a', 'delete x.a;')
 
     def test_getitem(self):
@@ -294,7 +294,7 @@ class Test(PyvaTest):
         }
         """, """
         x.prototype = {
-          '__init__': (function() {
+          "__init__": (function() {
             var a, nested, x;
 
             nested = function() {
@@ -305,7 +305,7 @@ class Test(PyvaTest):
             x = (a + 3);
             return x;
           }),
-          'add': (function(a, b, c) {
+          "add": (function(a, b, c) {
             return (1 + 2);
           })
         };
@@ -360,5 +360,26 @@ class Test(PyvaTest):
           g = function() {
             myself.f();
           };
+        };
+        """)
+
+    def test_starargs(self):
+        self.check("""
+        def f(*args):
+            pass
+        """, """
+        f = function() {
+          var args = Array.prototype.slice.call(arguments, 0);
+        };
+        """)
+
+    def test_default_args(self):
+        self.check("""
+        def f(x, y=3 * 60, *args):
+            pass
+        """, """
+        f = function(x, y) {
+          var args = Array.prototype.slice.call(arguments, 2);
+          if (typeof y == "undefined") y = (3 * 60);
         };
         """)
