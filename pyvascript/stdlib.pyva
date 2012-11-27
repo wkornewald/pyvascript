@@ -54,6 +54,9 @@ String.prototype.join = def(self, iterable):
                             return iterable.join(self)
 String.prototype.lower = String.prototype.toLowerCase
 String.prototype.upper = String.prototype.toUpperCase
+String.prototype.strip = def(self):
+                             return self.replace(JS('/^\s\s*/'), '').replace(
+                                                                    JS('/\s\s*$/'), '')
 
 
 def isinstance(item, cls):
