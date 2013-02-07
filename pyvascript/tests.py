@@ -122,6 +122,19 @@ class Test(PyvaTest):
         }
         """)
 
+    def test_ifexpr(self):
+        self.check("""
+        def f():
+            a = 5
+            b = 'gaga' if a == 5 else 'gugu'
+        """, """
+        f = function() {
+          var a, b;
+          a = 5;
+          b = ((a == 5) ? 'gaga' : 'gugu');
+        };
+        """)
+
     def test_while(self):
         self.check("""
         while a == 3 or b is None and c == True or d != False:
