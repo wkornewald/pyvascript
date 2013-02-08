@@ -100,7 +100,7 @@ name         = iname:n ~iskeyword(n)       -> ['name', n]
 escaped_char = '\\' :x -> ('\\' + x).decode('string_escape')
 string3 :e = match_string(e) (escaped_char | ~(?(len(e) != 3) vspace | match_string(e)) anything)*:c match_string(e) -> ''.join(c)
 string2 = string3('"""') | string3("'''") | string3('"') | string3("'")
-string = (string2:s optspace -> s)+:s -> ['string', ''.join(s)]
+string = string2:s (optspace string2)*:es -> ['string', s + ''.join(es)]
 
 hexdigit     = letterOrDigit:x !(self.hex_digits.find(x.lower())):v ?(v >= 0)  -> v
 hexlit       = hexlit:n hexdigit:d                                             -> (n * 16 + d)
