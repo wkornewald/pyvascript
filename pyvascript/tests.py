@@ -131,7 +131,7 @@ class Test(PyvaTest):
         f = function() {
           var a, b;
           a = 5;
-          b = ((a == 5) ? 'gaga' : 'gugu');
+          b = ((a == 5) ? "gaga" : "gugu");
         };
         """)
 

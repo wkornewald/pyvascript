@@ -37,7 +37,7 @@ number    :n       -> str(n)
 hexnumber :n       -> hex(n)
 string    :s       -> json.dumps(s)
 
-call ['name' 'jsnew'] [expr:obj] -> 'new %s' % obj
+call ['name' 'jsnew'] [expr:obj] -> '(new %s)' % obj
 call ['name' 'len'] [expr:obj] -> '%s.length' % obj
 call ['name' 'hasattr'] [expr:obj expr:attr] -> '(typeof %s[%s] != "undefined")' % (obj, attr)
 call ['name' 'getattr'] [expr:obj expr:attr] -> '%s[%s]' % (obj, attr)
