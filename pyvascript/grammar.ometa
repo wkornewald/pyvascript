@@ -69,8 +69,7 @@ unop  = optspace ('-' | '+' | '~'):op unop:e -> ['unop', op, e]
       | callable
 
 callable = optspace
-         ( new
-         | lambda
+         ( lambda
          | deflambda
          | get
          )
@@ -91,8 +90,6 @@ immediate = number
           | set
           | name
           | '(' !(self.enter_paren()) expr:ix optspace ')' !(self.leave_paren()) -> ix
-
-new = "new" mandspace get:c -> ['new', c]
 
 name_start   = letter | '$' | '_'
 name_rest    = name_start | digit
