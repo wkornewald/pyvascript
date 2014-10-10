@@ -1,16 +1,13 @@
-from pymeta.grammar import OMeta
-import json
+from .grammar_generated import GeneratedGrammar
+from .translator_generated import GeneratedTranslator
 import os
 
 def compile(source):
     return Translator.parse(Grammar.parse(source))
 
 grammar_path = os.path.join(os.path.dirname(__file__), 'grammar.ometa')
-pyva_grammar = open(grammar_path, 'r').read()
-def p(s):
-    print s
 
-class Grammar(OMeta.makeGrammar(pyva_grammar, {'p': p})):
+class Grammar(GeneratedGrammar):
     keywords = set(('and', 'as', 'break', 'case', 'catch', 'class', 'continue',
         'def', 'default', 'del', 'delete', 'do', 'elif', 'else', 'except',
         'false', 'finally', 'for', 'function', 'if', 'in', 'instanceof',
@@ -62,8 +59,8 @@ class Grammar(OMeta.makeGrammar(pyva_grammar, {'p': p})):
         return keyword in self.keywords
 
 translator_path = os.path.join(os.path.dirname(__file__), 'translator.ometa')
-pyva_translator = open(translator_path, 'r').read()
-class Translator(OMeta.makeGrammar(pyva_translator, {'p': p, 'json': json})):
+
+class Translator(GeneratedTranslator):
     op_map = {
         'not': '!',
     }
